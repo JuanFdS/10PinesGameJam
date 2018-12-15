@@ -7,6 +7,7 @@ public class GrabNDrop : MonoBehaviour
 	public GameObject[] inventory;
 
 	public int index = -1;
+	public int inventarioMaximo = 3;
 
 	void OnTriggerEnter2D(Collider2D col){
 		if(col.gameObject.tag == "colectable" && col.gameObject.tag =="targetobject")
@@ -63,7 +64,7 @@ public class GrabNDrop : MonoBehaviour
 
 	private bool inventarioLleno()
 	{
-		return index > 3;
+		return (index >= inventarioMaximo - 1);
 	}
 }
 
