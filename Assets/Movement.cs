@@ -8,21 +8,7 @@ public class Movement : MonoBehaviour
 	
 	void Update ()
 	{
-		if (Input.GetKey(KeyCode.LeftArrow))
-		{
-			transform.position += Vector3.left * speed * Time.deltaTime;
-		}
-		if (Input.GetKey(KeyCode.RightArrow))
-		{
-			transform.position += Vector3.right * speed * Time.deltaTime;
-		}
-		if (Input.GetKey(KeyCode.UpArrow))
-		{
-			transform.position += Vector3.up * speed * Time.deltaTime;
-		}
-		if (Input.GetKey(KeyCode.DownArrow))
-		{
-			transform.position += Vector3.down * speed * Time.deltaTime;
-		}
+		var direction = new Vector3 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical"), 0);
+		transform.position += direction * speed * Time.deltaTime;
 	}
 }

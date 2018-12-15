@@ -241,7 +241,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  index: 0
+  index: -1
 --- !u!1 &5129162572280612133
 GameObject:
   m_ObjectHideFlags: 0
