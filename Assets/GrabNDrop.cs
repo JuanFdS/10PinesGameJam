@@ -36,22 +36,27 @@ public class GrabNDrop : MonoBehaviour
 
 	}
 	
-	
+	GameObject itemADroppear;
+
 	void Drop()
 	{
-		var itemADroppear = inventory [index];
+		itemADroppear = inventory [index];
 		if (itemADroppear != null) {
 			inventory[index] = null;
 			index--;
 			itemADroppear.transform.position = transform.position;
+			itemADroppear.GetComponent<BoxCollider2D>().enabled = false;
+			itemADroppear.GetComponent<SetColliderActive>().Invocar();
 			itemADroppear.SetActive(true);
 		}
 	}
-
+		
 	void Update()
 	{
+		
 		if (Input.GetKeyDown(KeyCode.Space) && index >= 0)
 		{
+			
 			Drop();
 		}
 	}
