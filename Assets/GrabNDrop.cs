@@ -10,10 +10,12 @@ public class GrabNDrop : MonoBehaviour
 	public int inventarioMaximo = 3;
 
 	void OnTriggerEnter2D(Collider2D col){
-		if(col.gameObject.tag == "colectable" && col.gameObject.tag =="targetobject")
-		{ //&& this.inventary not full
+		if(col.gameObject.tag =="targetobject")
+		{ 
+			Debug.Log("Estas más cerca de ganar");
+			guardarEnInventario(col.gameObject);
 
-		} else if (col.gameObject.tag=="colectable") // && inventory not full
+		} else if (col.gameObject.tag=="colectable")
 		{ 
 			
 			guardarEnInventario(col.gameObject);
