@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class GrabNDrop : MonoBehaviour
+public class GrabNDrop : NetworkBehaviour
 {
 	public GameObject[] inventory;
 
@@ -28,7 +29,7 @@ public class GrabNDrop : MonoBehaviour
 		if(!inventarioLleno()){
 			index++;
 			inventory[index]=go;
-			go.SetActive(false);
+			if(isServer) { RpcDesaparecerItem(go); }
 
 			Debug.Log("Agregado al inventario");
 		}
@@ -38,27 +39,40 @@ public class GrabNDrop : MonoBehaviour
 		}
 
 	}
+
+	[ClientRpc]
+	void RpcDesaparecerItem(GameObject go)
+	{
+		go.SetActive (false);
+	}
 	
 	GameObject itemADroppear;
 
-	void Drop()
+	[ClientRpc]
+	void RpcClientDrop()
 	{
 		itemADroppear = inventory [index];
 		if (itemADroppear != null) {
 			inventory[index] = null;
 			index--;
+
 			itemADroppear.transform.position = transform.position;
 			itemADroppear.GetComponent<BoxCollider2D>().enabled = false;
 			itemADroppear.GetComponent<SetColliderActive>().Invocar();
 			itemADroppear.SetActive(true);
 		}
 	}
+
+	[Command]
+	void CmdServerDrop() {
+		RpcClientDrop();
+	}
 		
 	void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space) && index >= 0)
 		{
-			Drop();
+			CmdServerDrop();
 		}
 	}
 
