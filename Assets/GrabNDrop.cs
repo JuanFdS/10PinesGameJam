@@ -54,10 +54,8 @@ public class GrabNDrop : MonoBehaviour
 		
 	void Update()
 	{
-		
 		if (Input.GetKeyDown(KeyCode.Space) && index >= 0)
 		{
-			
 			Drop();
 		}
 	}
