@@ -5,11 +5,11 @@ using UnityEngine.Networking;
 
 public class ItemNetworkManager : NetworkBehaviour
 {
-	public GameObject itemPrefab;
+	public GameObject[] itemPrefabs;
 
-	public GameObject InstanciarItem(Vector3 posicion)
+	public GameObject InstanciarItem(Vector3 posicion, int tipoItem)
 	{
-		var item = (GameObject)Instantiate(itemPrefab, posicion, Quaternion.identity);
+		var item = (GameObject)Instantiate(itemPrefabs[tipoItem], posicion, Quaternion.identity);
 		NetworkServer.Spawn(item);
 		return item;
 	}

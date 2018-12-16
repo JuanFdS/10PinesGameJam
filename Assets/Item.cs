@@ -8,6 +8,8 @@ public class Item : MonoBehaviour
     private GameObject droppedBy;
     private float droppedAt;
 
+    public int itemType;
+
     internal void rememberDroppedBy(GameObject jugador)
     {
         droppedBy = jugador;

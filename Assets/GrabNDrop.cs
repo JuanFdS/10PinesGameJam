@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class GrabNDrop : NetworkBehaviour
 {
-    [SyncVar]
-    public int cantidadItems = 0;
+    public Stack<int> inventario = new Stack<int>();
 
-	public GameObject cartelVictoriaPrefab;
-	public GameObject cartelDerrotaPrefab;
+    public GameObject cartelVictoriaPrefab;
+    public GameObject cartelDerrotaPrefab;
 
     public int inventarioMaximo = 3;
 
@@ -30,12 +30,12 @@ public class GrabNDrop : NetworkBehaviour
 
     void guardarEnInventario(GameObject item)
     {
-        Debug.Log(cantidadItems);
+        Debug.Log(inventario.Count);
         if (HayLugarEnElInventario() && item.GetComponent<Item>().canBePickedBy(gameObject))
         {
-            cantidadItems++;
+            inventario.Push(item.GetComponent<Item>().itemType);
             Destroy(item);
-			if (cantidadItems >= 3) {
+			if (inventario.Count >= 3 && inventario.Contains(0) && inventario.Contains(1) && inventario.Contains(2)) {
 				RpcNotificarResultado ();
 			}
 
@@ -61,11 +61,11 @@ public class GrabNDrop : NetworkBehaviour
     [Command]
     void CmdServerDrop()
     {
-        if (cantidadItems > 0)
+        if (inventario.Count > 0)
         {
-            cantidadItems--;
+            var tipoItem = inventario.Pop();
             var itemManager = GameObject.Find("ItemNetworkManager").GetComponent<ItemNetworkManager>();
-			var droppedItem = itemManager.InstanciarItem (transform.position);
+			var droppedItem = itemManager.InstanciarItem (transform.position, tipoItem);
 			Item itemScript = droppedItem.GetComponent<Item>();
 			itemScript.rememberDroppedBy(gameObject);
         }
@@ -83,7 +83,7 @@ public class GrabNDrop : NetworkBehaviour
 
     private bool HayLugarEnElInventario()
     {
-        return cantidadItems < inventarioMaximo;
+        return inventario.Count < inventarioMaximo;
     }
 }
 
