@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 public class GrabNDrop : NetworkBehaviour
 {
-    public Stack<int> inventario = new Stack<int>();
+    public Queue<int> inventario = new Queue<int>();
 
     public GameObject cartelVictoriaPrefab;
     public GameObject cartelDerrotaPrefab;
@@ -50,7 +50,7 @@ public class GrabNDrop : NetworkBehaviour
     private void AgregarAlInventario(GameObject item)
     {
         int itemType = item.GetComponent<Item>().itemType;
-        inventario.Push(itemType);
+        inventario.Enqueue(itemType);
         Destroy(item);
         Debug.Log("Agregado al inventario item tipo " + itemType);
     }
@@ -85,7 +85,7 @@ public class GrabNDrop : NetworkBehaviour
     {
         if (inventario.Count > 0)
         {
-            var tipoItem = inventario.Pop();
+            var tipoItem = inventario.Dequeue();
             var itemManager = GameObject.Find("ItemNetworkManager").GetComponent<ItemNetworkManager>();
 			var droppedItem = itemManager.InstanciarItem (transform.position, tipoItem);
 			Item itemScript = droppedItem.GetComponent<Item>();
