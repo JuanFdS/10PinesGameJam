@@ -6,6 +6,9 @@ public class GrabNDrop : NetworkBehaviour
     [SyncVar]
     public int cantidadItems = 0;
 
+	public GameObject cartelVictoriaPrefab;
+	public GameObject cartelDerrotaPrefab;
+
     public int inventarioMaximo = 3;
 
     void OnTriggerEnter2D(Collider2D col)
@@ -32,6 +35,9 @@ public class GrabNDrop : NetworkBehaviour
         {
             cantidadItems++;
             Destroy(item);
+			if (cantidadItems >= 3) {
+				RpcNotificarResultado ();
+			}
 
             Debug.Log("Agregado al inventario");
         }
@@ -42,6 +48,16 @@ public class GrabNDrop : NetworkBehaviour
 
     }
 
+	[ClientRpc]
+	void RpcNotificarResultado()
+	{
+		if (isLocalPlayer) {
+			Instantiate (cartelVictoriaPrefab);
+		} else {
+			Instantiate (cartelDerrotaPrefab);
+		}
+	}
+
     [Command]
     void CmdServerDrop()
     {
@@ -49,12 +65,9 @@ public class GrabNDrop : NetworkBehaviour
         {
             cantidadItems--;
             var itemManager = GameObject.Find("ItemNetworkManager").GetComponent<ItemNetworkManager>();
-            var itemPrefab = itemManager.itemPrefab;
-            var item = (GameObject)Instantiate(itemPrefab, transform.position, Quaternion.identity);
-            Item itemScript = item.GetComponent<Item>();
-            itemScript.rememberDroppedBy(gameObject);
-
-            NetworkServer.Spawn(item);
+			var droppedItem = itemManager.InstanciarItem (transform.position);
+			Item itemScript = droppedItem.GetComponent<Item>();
+			itemScript.rememberDroppedBy(gameObject);
         }
     }
 

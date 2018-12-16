@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1187275300986729315}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.7900001, y: 0, z: -6}
+  m_LocalPosition: {x: 0, y: 0, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1187275302673625246}
@@ -217,11 +217,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantidadItems: 0
-  inventory:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  index: -1
+  cartelVictoriaPrefab: {fileID: 2784820481795124255, guid: cfeba3776fd38970aa6f35f51b08812f,
+    type: 3}
+  cartelDerrotaPrefab: {fileID: 9010395166560470051, guid: 66b81f7676e9b5d88adc071134934ad4,
+    type: 3}
   inventarioMaximo: 3
 --- !u!114 &7190891627504676005
 MonoBehaviour:
@@ -332,8 +331,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1187275302673625232}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.7798002, y: 0, z: 6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 6}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_Children: []
   m_Father: {fileID: 1187275300986729314}
   m_RootOrder: 0
