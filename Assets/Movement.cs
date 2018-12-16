@@ -7,7 +7,7 @@ public class Movement : NetworkBehaviour
 { 
 	public int speed;
 	
-	void Update ()
+	void FixedUpdate ()
 	{
 		if (isLocalPlayer)
 		{
