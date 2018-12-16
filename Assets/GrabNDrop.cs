@@ -31,25 +31,47 @@ public class GrabNDrop : NetworkBehaviour
     void guardarEnInventario(GameObject item)
     {
         Debug.Log(inventario.Count);
-        if (HayLugarEnElInventario() && item.GetComponent<Item>().canBePickedBy(gameObject))
+        if (HayLugarEnElInventario() && PuedeAgarrar(item))
         {
-            inventario.Push(item.GetComponent<Item>().itemType);
-            Destroy(item);
-			if (inventario.Count >= 3 && inventario.Contains(0) && inventario.Contains(1) && inventario.Contains(2)) {
-				RpcNotificarResultado ();
-			}
+            AgregarAlInventario(item);
 
-            Debug.Log("Agregado al inventario");
+            if (TieneTodosLosTiposDeItems())
+            {
+                RpcNotificarQueGanaElJugadorActual();
+            }
         }
         else
         {
-            Debug.Log("inventario lleno, drop something with space key");
+            Debug.Log("Inventario lleno, drop something with space key");
         }
 
     }
 
-	[ClientRpc]
-	void RpcNotificarResultado()
+    private void AgregarAlInventario(GameObject item)
+    {
+        int itemType = item.GetComponent<Item>().itemType;
+        inventario.Push(itemType);
+        Destroy(item);
+        Debug.Log("Agregado al inventario item tipo " + itemType);
+    }
+
+    private bool PuedeAgarrar(GameObject item)
+    {
+        return item.GetComponent<Item>().canBePickedBy(gameObject);
+    }
+
+    private bool TieneTodosLosTiposDeItems()
+    {
+        int[] tiposDeItems = new int[] { 0, 1, 2 };
+        foreach (int tipoItem in tiposDeItems)
+        {
+            if (!inventario.Contains(tipoItem)) return false;
+        }
+        return true;
+    }
+
+    [ClientRpc]
+	void RpcNotificarQueGanaElJugadorActual()
 	{
 		if (isLocalPlayer) {
 			Instantiate (cartelVictoriaPrefab);
