@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class GrabNDrop : NetworkBehaviour
 {
+    [SyncVar]
+    public int cantidadItems = 0;
+
     public GameObject[] inventory;
 
 	public int index = -1;
@@ -16,7 +17,7 @@ public class GrabNDrop : NetworkBehaviour
 		if(col.gameObject.tag =="targetobject")
 		{ 
 			Debug.Log("Estas más cerca de ganar");
-			guardarEnInventario(col.gameObject);
+            guardarEnInventario(col.gameObject);
 
 		} else if (col.gameObject.tag=="colectable")
 		{ 
@@ -25,11 +26,13 @@ public class GrabNDrop : NetworkBehaviour
 		}
 	}
 
-	void guardarEnInventario(GameObject go)
+	void guardarEnInventario(GameObject item)
 	{
 		Debug.Log(index);
-		if(!inventarioLleno()){
-			RpcDesaparecerItem(go);
+        if (HayLugarEnElInventario() && item.GetComponent<Item>().canBePickedBy(gameObject))
+        {
+            cantidadItems++;
+            Destroy(item);
 
 			Debug.Log("Agregado al inventario");
 		}
@@ -60,27 +63,44 @@ public class GrabNDrop : NetworkBehaviour
 
 			itemADroppear.transform.position = transform.position;
 			itemADroppear.GetComponent<BoxCollider2D>().enabled = false;
-			itemADroppear.GetComponent<SetColliderActive>().Invocar();
+			itemADroppear.GetComponent<Item>().Invocar();
 			itemADroppear.SetActive(true);
 		}
 	}
 
 	[Command]
 	void CmdServerDrop() {
-		RpcClientDrop();
-	}
+        if (cantidadItems > 0)
+        {
+            cantidadItems--;
+            Debug.Log("baje el item");
+            var itemManager = GameObject.Find("ItemNetworkManager").GetComponent<ItemNetworkManager>();
+            var itemPrefab = itemManager.itemPrefab;
+            if (itemPrefab == null) { Debug.Log("Item no existe1"); }
+            var item = (GameObject)Instantiate(itemPrefab, transform.position, Quaternion.identity);
+            if (item == null) { Debug.Log("Item no existe"); }
+            //item.GetComponent<BoxCollider2D>().enabled = false;
+            Item itemScript = item.GetComponent<Item>();
+            //itemScript.Invocar();
+            itemScript.rememberDroppedBy(gameObject);
+            
+            NetworkServer.Spawn(item);
+        }
+    }
 		
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Space) && index >= 0)
+        if (!isLocalPlayer) return;
+
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			CmdServerDrop();
-		}
+            CmdServerDrop();
+        }
 	}
 
-	private bool inventarioLleno()
+	private bool HayLugarEnElInventario()
 	{
-		return (index >= inventarioMaximo - 1);
-	}
+        return cantidadItems < inventarioMaximo;
+    }
 }
 
