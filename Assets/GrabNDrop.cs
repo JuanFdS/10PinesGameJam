@@ -5,12 +5,14 @@ using UnityEngine.Networking;
 
 public class GrabNDrop : NetworkBehaviour
 {
-	public GameObject[] inventory;
+    public GameObject[] inventory;
 
 	public int index = -1;
 	public int inventarioMaximo = 3;
 
-	void OnTriggerEnter2D(Collider2D col){
+	void OnTriggerEnter2D(Collider2D col) {
+        if (!isServer) return;
+
 		if(col.gameObject.tag =="targetobject")
 		{ 
 			Debug.Log("Estas más cerca de ganar");
@@ -27,9 +29,7 @@ public class GrabNDrop : NetworkBehaviour
 	{
 		Debug.Log(index);
 		if(!inventarioLleno()){
-			index++;
-			inventory[index]=go;
-			if(isServer) { RpcDesaparecerItem(go); }
+			RpcDesaparecerItem(go);
 
 			Debug.Log("Agregado al inventario");
 		}
@@ -43,7 +43,9 @@ public class GrabNDrop : NetworkBehaviour
 	[ClientRpc]
 	void RpcDesaparecerItem(GameObject go)
 	{
-		go.SetActive (false);
+        index++;
+        inventory[index] = go;
+        go.SetActive (false);
 	}
 	
 	GameObject itemADroppear;
