@@ -4,12 +4,29 @@ using UnityEngine.Networking;
 
 public class GrabNDrop : NetworkBehaviour
 {
-    public Queue<int> inventario = new Queue<int>();
-
+    public GameObject cartelInventarioLleno;
     public GameObject cartelVictoriaPrefab;
     public GameObject cartelDerrotaPrefab;
-
     public int inventarioMaximo = 3;
+
+    private GameObject instanciaCartelInventarioLleno;
+    private Queue<int> inventario = new Queue<int>();
+
+    public GameObject InstanciaCartelInventarioLleno
+    {
+        get {
+            if (instanciaCartelInventarioLleno == null)
+            {
+                instanciaCartelInventarioLleno = Instantiate(cartelInventarioLleno);
+                instanciaCartelInventarioLleno.SetActive(false);
+            }
+            return instanciaCartelInventarioLleno;
+        }
+        set
+        {
+            instanciaCartelInventarioLleno = value;
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -53,6 +70,15 @@ public class GrabNDrop : NetworkBehaviour
         inventario.Enqueue(itemType);
         Destroy(item);
         Debug.Log("Agregado al inventario item tipo " + itemType);
+
+        RpcActualizarEstadoInventario(!HayLugarEnElInventario());
+    }
+
+    [ClientRpc]
+    private void RpcActualizarEstadoInventario(bool inventarioLleno)
+    {
+        if (isLocalPlayer)
+            InstanciaCartelInventarioLleno.SetActive(inventarioLleno);
     }
 
     private bool PuedeAgarrar(GameObject item)
@@ -90,6 +116,7 @@ public class GrabNDrop : NetworkBehaviour
 			var droppedItem = itemManager.InstanciarItem (transform.position, tipoItem);
 			Item itemScript = droppedItem.GetComponent<Item>();
 			itemScript.rememberDroppedBy(gameObject);
+            RpcActualizarEstadoInventario(!HayLugarEnElInventario());
         }
     }
 

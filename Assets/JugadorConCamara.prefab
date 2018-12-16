@@ -216,7 +216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46c6055b265f7be4184f0a0ac870f699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cantidadItems: 0
+  cartelInventarioLleno: {fileID: 5248848110879067745, guid: 2ea3e0c84e8bca2d7bec5a885dcb9097,
+    type: 3}
   cartelVictoriaPrefab: {fileID: 2784820481795124255, guid: cfeba3776fd38970aa6f35f51b08812f,
     type: 3}
   cartelDerrotaPrefab: {fileID: 9010395166560470051, guid: 66b81f7676e9b5d88adc071134934ad4,
@@ -397,3 +398,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e14a7d68131d81d4caa12e4cd85c4454, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemType: 0
