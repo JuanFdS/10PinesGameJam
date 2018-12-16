@@ -8,16 +8,6 @@ public class Item : MonoBehaviour
     private GameObject droppedBy;
     private float droppedAt;
 
-    void setActive()
-	{
-		GetComponent<BoxCollider2D>().enabled=true;
-	}
-
-	public void Invocar()
-	{
-		Invoke("setActive",5f);
-	}
-
     internal void rememberDroppedBy(GameObject jugador)
     {
         droppedBy = jugador;
